@@ -129,14 +129,15 @@ def get_contacts():
 
 @app.route('/get_chat_history', methods=['GET'])
 def get_chat_history():
-    contact_id = request.args.get('contact_id')
-    max_messages = request.args.get('max_messages', 100)  # Default to 100 if not provided
+    data = request.get_json()
+    contact_id = data.get('contact_id')
+    max_messages = data.get('max_messages', 100)  # Default to 100 if not provided
 
     # Debug print to check the contact_id format
     print("Contact ID:", contact_id)
 
     if not contact_id or not (contact_id.endswith("@c.us") or contact_id.endswith("@g.us")):
-        return jsonify({"error": "Invalid contact ID format. Please use 'phone_number@c.us' or 'group_id@g.us'."}), 400
+        return jsonify({"error": f"Invalid contact ID format {contact_id}. Please use 'phone_number@c.us' or 'group_id@g.us'."}), 400
 
     api_url = f"https://api.green-api.com/waInstance7103890739/getChatHistory/{API_TOKEN}"
     payload = {
